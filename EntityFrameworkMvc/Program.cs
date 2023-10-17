@@ -1,8 +1,8 @@
+using EntityFrameworkMvc.Mappers;
 using EntityFrameworkMvc.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using EntityFrameworkMvc.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +21,11 @@ builder.Services.AddDbContext<ModelDBContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(Assembly.Load("EntityFrameWorkMvc"));
+
+//Agregamos los controladores
+builder.Services.AddScoped<IEditorialService, EditorialService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();
 
@@ -43,16 +48,5 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.MapControllers();
-
-//Creacion de metodos de listar para validar data.
-app.MapGet("/api/editorial", ([FromServices] ModelDBContext dbcontext) =>
-{
-    return Results.Ok(dbcontext.Editorials.ToList());
-});
-
-app.MapGet("/api/book", ([FromServices] ModelDBContext dbcontext) =>
-{
-    return Results.Ok(dbcontext.Books.ToList());
-});
 
 app.Run();
