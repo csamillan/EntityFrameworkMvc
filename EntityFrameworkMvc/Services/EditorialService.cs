@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EntityFrameworkMvc.Dtos;
 using EntityFrameworkMvc.Model;
+using FluentValidation;
 
 namespace EntityFrameworkMvc.Services
 {
@@ -10,10 +11,13 @@ namespace EntityFrameworkMvc.Services
 
         private readonly IMapper _mapper;
 
-        public EditorialService(ModelDBContext dbContext, IMapper mapper)
+        private readonly IValidator<SaveEditorialDto> _validator;
+
+        public EditorialService(ModelDBContext dbContext, IMapper mapper, IValidator<SaveEditorialDto> validator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _validator = validator;
         }
 
         public IList<EditorialDto> Get()
@@ -24,6 +28,8 @@ namespace EntityFrameworkMvc.Services
 
         public void Save(SaveEditorialDto dto)
         {
+            _validator.ValidateAndThrow(dto);
+
             var editorial = _mapper.Map<Editorial>(dto);
             _dbContext.Editorials.Add(editorial);
             _dbContext.SaveChanges();
@@ -31,6 +37,8 @@ namespace EntityFrameworkMvc.Services
 
         public void Update(int id, SaveEditorialDto dto)
         {
+            _validator.ValidateAndThrow(dto);
+
             var currentEditorial = _dbContext.Editorials.Find(id);
 
             if(currentEditorial != null && currentEditorial.Id == dto.Id)

@@ -18,7 +18,7 @@ namespace EntityFrameworkMvc.Model
             editorialsInit.Add(new Editorial
             {
                 Id = 1,
-                Name = "Libreria San Marcos",
+                Name = "Libreria San Jorge",
                 NameContact = "Manuel Fernandez",
                 Address = "Urb. Salamanca Mz 4 Lt 4",
                 City = "Lima",
@@ -85,7 +85,7 @@ namespace EntityFrameworkMvc.Model
                 Year = 2005,
                 Price = 28,
                 Commentary = "Libro basicos para estudiantes de programacion",
-                EditorialId = 1,
+                EditorialId = 1
             });
 
             booksInit.Add(new Book()

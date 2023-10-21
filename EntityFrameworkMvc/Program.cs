@@ -1,6 +1,7 @@
 using EntityFrameworkMvc.Mappers;
 using EntityFrameworkMvc.Model;
 using EntityFrameworkMvc.Services;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<ModelDBContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.Load("EntityFrameWorkMvc"));
+builder.Services.AddValidatorsFromAssembly(Assembly.Load("EntityFrameWorkMvc"));
 
 //Agregamos los controladores
 builder.Services.AddScoped<IEditorialService, EditorialService>();
@@ -32,7 +34,7 @@ var app = builder.Build();
 //Utilizacion de la conexion y creacion de base de datos.
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetService<ModelDBContext>();
+    var context = scope.ServiceProvider.GetRequiredService<ModelDBContext>();
     //context.Database.EnsureDeleted(); //Eliminar Base de datos.
     context.Database.EnsureCreated();
 }
