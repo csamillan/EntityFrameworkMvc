@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EntityFrameworkMvc.Dtos;
 using EntityFrameworkMvc.Model;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkMvc.Services
@@ -11,10 +12,13 @@ namespace EntityFrameworkMvc.Services
 
         private readonly IMapper _mapper;
 
-        public BookService(ModelDBContext dbContext, IMapper mapper)
+        private readonly IValidator<SaveBookDto> _validator;
+
+        public BookService(ModelDBContext dbContext, IMapper mapper, IValidator<SaveBookDto> validator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _validator = validator;
         }
 
         public IList<BookDto> Get()
@@ -28,6 +32,8 @@ namespace EntityFrameworkMvc.Services
 
         public void Save(SaveBookDto dto)
         {
+            _validator.ValidateAndThrow(dto);
+
             var book = _mapper.Map<Book>(dto);
             _dbContext.Books.Add(book);
             _dbContext.SaveChanges();
@@ -35,9 +41,11 @@ namespace EntityFrameworkMvc.Services
 
         public void Update(int id, SaveBookDto dto)
         {
+            _validator.ValidateAndThrow(dto);
+
             var currentBook = _dbContext.Books.Find(id);
 
-            if(currentBook != null && currentBook.Id == dto.Id)
+            if (currentBook != null && currentBook.Id == dto.Id)
             {
                 _mapper.Map(dto, currentBook);
                 _dbContext.SaveChanges();
@@ -48,7 +56,7 @@ namespace EntityFrameworkMvc.Services
         {
             var currentBook = _dbContext.Books.Find(id);
 
-            if(currentBook != null)
+            if (currentBook != null)
             {
                 _dbContext.Remove(currentBook);
                 _dbContext.SaveChanges();

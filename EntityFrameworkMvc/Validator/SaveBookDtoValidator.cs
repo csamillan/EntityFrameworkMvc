@@ -30,6 +30,9 @@ namespace EntityFrameworkMvc.Validator
                             .NotNull();
             RuleFor(x => x.Commentary)
                             .MaximumLength(150);
+            RuleFor(x => x.EditorialId)
+                            .NotEmpty()
+                            .NotNull();
         }
     }
 }

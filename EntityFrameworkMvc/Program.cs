@@ -28,6 +28,8 @@ builder.Services.AddValidatorsFromAssembly(Assembly.Load("EntityFrameWorkMvc"));
 //Agregamos los controladores
 builder.Services.AddScoped<IEditorialService, EditorialService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IInventaryService, InventaryService>();
 
 var app = builder.Build();
 

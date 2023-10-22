@@ -10,6 +10,10 @@ namespace EntityFrameworkMvc.Model
 
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<Branch> Branches { get; set; }
+
+        public DbSet<Inventary> Inventaries { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Creacion de Data Inicial Para Editorial
@@ -123,6 +127,91 @@ namespace EntityFrameworkMvc.Model
                                         .HasMaxLength(150);
 
                 Book.HasData(booksInit);
+            });
+
+            List<Branch> branchsInit = new List<Branch>();
+
+            branchsInit.Add(new Branch
+            {
+                Id = 1,
+                Name = "Sucursal Inicial",
+                NameCharge = "Jorge Uchofen",
+                Address = "Urb. Santa Lucia Mz 4 Lt 14",
+                City = "Lima",
+                Phone = "+51222555888",
+                Email = "sucInicial@gmail.com",
+                Commentary = "Sucursal principal"
+            });
+
+            branchsInit.Add(new Branch
+            {
+                Id = 2,
+                Name = "Sucursal Secundaria",
+                NameCharge = "Victor Hernandez",
+                Address = "Av. Emiliano Niño N° 548",
+                City = "Chiclayo",
+                Phone = "+51558999666",
+                Email = "sucSecundaria@gmail.com",
+                Commentary = "Sucursal Secundaria para Emergencias"
+            });
+
+            modelBuilder.Entity<Branch>(Branch =>
+            {
+                Branch.ToTable("Branch");
+                Branch.HasKey(p => p.Id);
+
+                Branch.Property(p => p.Name)
+                                        .IsRequired()
+                                        .HasMaxLength(50);
+                Branch.Property(p => p.NameCharge)
+                                        .IsRequired()
+                                        .HasMaxLength(100);
+                Branch.Property(p => p.Address)
+                                        .IsRequired()
+                                        .HasMaxLength(150);
+                Branch.Property(p => p.City)
+                                        .IsRequired()
+                                        .HasMaxLength(50);
+                Branch.Property(p => p.Phone)
+                                        .IsRequired()
+                                        .HasMaxLength(12);
+                Branch.Property(p => p.Email)
+                                        .IsRequired()
+                                        .HasMaxLength(100);
+                Branch.Property(p => p.Commentary)
+                                        .IsRequired(false)
+                                        .HasMaxLength(150);
+
+                Branch.HasData(branchsInit);
+            });
+
+            List<Inventary> inventariesInit = new List<Inventary>();
+
+            inventariesInit.Add(new Inventary
+            {
+                Id = 1,
+                Stock = 5000,
+                BookId = 1,
+                BranchId = 2
+            });
+
+            inventariesInit.Add(new Inventary
+            {
+                Id = 2,
+                Stock = 2000,
+                BookId = 2,
+                BranchId = 1
+            });
+
+            modelBuilder.Entity<Inventary>(Inventary =>
+            {
+                Inventary.ToTable("Inventary");
+                Inventary.HasKey(p => p.Id);
+
+                Inventary.Property(p => p.Stock)
+                                        .IsRequired();
+
+                Inventary.HasData(inventariesInit);
             });
         }
     }
